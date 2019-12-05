@@ -39,6 +39,7 @@ function bolo(message) {
     const speech = new SpeechSynthesisUtterance();
 
     speech.onerror = function (event) {
+
         speechError.textContent = event.error;
     }
 
@@ -47,11 +48,12 @@ function bolo(message) {
         const reply = rep[Math.floor(Math.random() * rep.length)];
         console.log(reply);
         speech.text = reply;
-
+      
     }else{
         speech.text = "kiya bol rahe ho humko samajh nhi araha hai";
         reply.textContent = speech.text;
     }
+
    
     speech.volume = 2;
     speech.rate = 0.7;
