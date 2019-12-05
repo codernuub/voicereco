@@ -3,7 +3,7 @@ const reply = document.getElementById("reply");
 const recoError = document.getElementById("recoError");
 const speechError = document.getElementById("speechError");
 
-const rep = ['hi', 'ha mei or btao', 'jao padhai kro', 'apna kaam krna'];
+const rep = ['hi', 'ha mei or batao','bye', 'apna kaam karna'];
 
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 const recognition = new SpeechRecognition();
@@ -20,7 +20,6 @@ recognition.onresult = function (event) {
     const current = event.resultIndex;
     const transcript = event.results[current][0].transcript;
     btn.textContent = "activate";
-    reply.textContent = transcript;
     bolo(transcript);
 
 }
@@ -48,6 +47,7 @@ function bolo(message) {
         const reply = rep[Math.floor(Math.random() * rep.length)];
         console.log(reply);
         speech.text = reply;
+        reply.textContent = speech.text;
       
     }else{
         speech.text = "kiya bol rahe ho humko samajh nhi araha hai";
@@ -56,7 +56,7 @@ function bolo(message) {
 
    
     speech.volume = 2;
-    speech.rate = 0.7;
+    speech.rate = 0.9;
     speech.pitch = 0.8;
 
     window.speechSynthesis.speak(speech);
