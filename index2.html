@@ -80,7 +80,7 @@
     recognition.onresult = function (event) {
 
         const current = event.resultIndex;
-        const transcript = event.results[resultIndex][0].transcript; 
+        const transcript = event.results[current][0].transcript; 
 
         msg.textContent = " ";
         content.textContent = transcript;
