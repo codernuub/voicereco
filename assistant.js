@@ -44,10 +44,10 @@ function bolo(message) {
 
     if (message.includes("hello")) {
     
-        const reply = rep[Math.floor(Math.random() * rep.length)];
-        console.log(reply);
-        speech.text = reply;
-        reply.textContent = reply;
+        const rely = rep[Math.floor(Math.random() * rep.length)];
+        //console.log(rely);
+        speech.text = rely;
+        reply.textContent = rely;
       
     }else{
         speech.text = "kiya bol rahe ho humko samajh nhi araha hai";
