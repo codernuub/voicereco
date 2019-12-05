@@ -47,7 +47,7 @@ function bolo(message) {
         const reply = rep[Math.floor(Math.random() * rep.length)];
         console.log(reply);
         speech.text = reply;
-        reply.textContent = speech.text;
+        reply.textContent = reply;
       
     }else{
         speech.text = "kiya bol rahe ho humko samajh nhi araha hai";
