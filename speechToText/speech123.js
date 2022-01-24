@@ -15,6 +15,7 @@
 
 	// Add new line
 	function checkNewLineCmd(str) {
+		document.querySelector('.status').textContent = str;
 		return ['new line', 'newline'].includes(str.toLowerCase());
 	}
 
