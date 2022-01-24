@@ -20,7 +20,7 @@
 
 		function updateNewLinePair(str) {
 			var tempPair = "", wordList = [];
-			str.split(' ').forEach((word, index) => {
+			str.split(' ').forEach((word) => {
 
 				if (word.toLowerCase() === "newline") {
 					word = `${word}\n`;
@@ -28,7 +28,6 @@
 					return;
 				}
 
-				//Push previous value in wordList when tempPair and word = new
 				if (tempPair && word.toLowerCase() === "new") {
 					wordList.push(tempPair);
 					tempPair = word;
@@ -163,9 +162,9 @@
 					var firstAlternative = result[0];
 					if (result.isFinal) {
 						finalTranscript = firstAlternative.transcript;
-					} else {
-						interimTranscript += firstAlternative.transcript;
-					}
+					} //else {
+					//interimTranscript += firstAlternative.transcript;
+					//}
 				}
 
 				// capitalize transcript if start of new sentence
