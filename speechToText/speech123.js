@@ -20,7 +20,7 @@
 
 	// Add new line
 	function checkNewLineCmd(str) {
-		consoleResult(`Recieved Transcript: ${transcript}, ${transcript.length}`);
+		consoleResult(`Recieved Transcript: ${str}, ${str.length}`);
 		return ['new line', 'newline'].includes(str.toLowerCase());
 	}
 
