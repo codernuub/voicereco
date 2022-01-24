@@ -7,7 +7,7 @@
 	const status = document.querySelector('.status');
 	function consoleResult(transcript) {
 		const span = document.createElement('span');
-		span.textContent = transcript;
+		span.innerHTML = `${transcript}<br/>`;
 		status.appendChild(span);
 	}
 	var talkMsg = 'Speak now';
@@ -20,6 +20,7 @@
 
 	// Add new line
 	function checkNewLineCmd(str) {
+		consoleResult(`Recieved Transcript: ${transcript}, ${transcript.length}`);
 		return ['new line', 'newline'].includes(str.toLowerCase());
 	}
 
@@ -129,7 +130,6 @@
 			var interimTranscript = '';
 			for (var i = event.resultIndex; i < resultList.length; ++i) {
 				var result = resultList[i];
-
 				// get this result's first SpeechRecognitionAlternative object
 				var firstAlternative = result[0];
 				if (result.isFinal) {
@@ -141,11 +141,10 @@
 
 			// capitalize transcript if start of new sentence
 			var transcript = finalTranscript || interimTranscript;
-			consoleResult(transcript);
 			transcript = !prefix || isSentence ? capitalize(transcript) : transcript;
 
 			//Check new line command
-			transcript = checkNewLineCmd(transcript) ? "\n" : transcript;
+			transcript = checkNewLineCmd(transcript) ? `${transcript}\n` : transcript;
 			// append transcript to cached input value
 			inputEl.value = prefix + transcript;
 			console.log(inputEl.value);
