@@ -4,7 +4,12 @@
 
 	// check for support (webkit only)
 	if (!('webkitSpeechRecognition' in window)) return;
-
+	const status = document.querySelector('.status');
+	function consoleResult(transcript) {
+		const span = document.createElement('span');
+		span.textContent = transcript;
+		status.appendChild(span);
+	}
 	var talkMsg = 'Speak now';
 	// seconds to wait for more input after last
 	var defaultPatienceThreshold = 6;
@@ -15,7 +20,6 @@
 
 	// Add new line
 	function checkNewLineCmd(str) {
-		document.querySelector('.status').textContent = str;
 		return ['new line', 'newline'].includes(str.toLowerCase());
 	}
 
@@ -128,7 +132,6 @@
 
 				// get this result's first SpeechRecognitionAlternative object
 				var firstAlternative = result[0];
-
 				if (result.isFinal) {
 					finalTranscript = firstAlternative.transcript;
 				} else {
@@ -138,6 +141,7 @@
 
 			// capitalize transcript if start of new sentence
 			var transcript = finalTranscript || interimTranscript;
+			consoleResult(transcript);
 			transcript = !prefix || isSentence ? capitalize(transcript) : transcript;
 
 			//Check new line command
