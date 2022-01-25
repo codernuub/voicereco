@@ -12,7 +12,7 @@
 		if (!('webkitSpeechRecognition' in window)) return;
 		var talkMsg = 'Speak now';
 		// seconds to wait for more input after last
-		var defaultPatienceThreshold = 10;
+		var defaultPatienceThreshold = 6;
 
 		function capitalize(str) {
 			return str.charAt(0).toUpperCase() + str.slice(1);
@@ -55,7 +55,7 @@
 		var inputEls = document.getElementsByClassName('speech-input');
 
 		[].forEach.call(inputEls, function (inputEl) {
-			var patience = /*parseInt(inputEl.dataset.patience, 10) ||*/ defaultPatienceThreshold;
+			var patience = parseInt(inputEl.dataset.patience, 10) || defaultPatienceThreshold;
 			var micBtn, micIcon, holderIcon, newWrapper;
 			var shouldCapitalize = true;
 
@@ -136,7 +136,10 @@
 			};
 
 			recognition.onend = function () {
-				console.log("Ended")
+				console.log("Ended");
+				if(timesNotUp)
+				recognition.start();
+
 				recognizing = false;
 				clearTimeout(timeout);
 				micBtn.classList.remove('listening');
@@ -152,7 +155,7 @@
 			recognition.onresult = function (event) {
 				clearTimeout(timeout);
 				//get SpeechRecognitionResultList object
-				var resultList = event.results;
+				/*var resultList = event.results;
 				// go through each SpeechRecognitionResult object in the list
 				var finalTranscript = '';
 				var interimTranscript = '';
@@ -165,13 +168,11 @@
 					} else {
 						interimTranscript += firstAlternative.transcript;
 					}
-				}
+				}*/
 
 				// capitalize transcript if start of new sentence
-				//consoleResult(`finalTranscript", ${finalTranscript}`);
-				//consoleResult(`InterimTranscript", ${interimTranscript}`);
-				var transcript = finalTranscript || interimTranscript;
-				//var transcript = event.results[0][0].transcript;
+				//var transcript = finalTranscript || interimTranscript;
+				var transcript = event.results[0][0].transcript;
 				transcript = !prefix || isSentence ? capitalize(transcript) : transcript;
 
 				//Check new line word and append new line char
@@ -197,7 +198,6 @@
 					recognition.stop();
 					return;
 				}
-
 				// Cache current input value which the new transcript will be appended to
 				var endsWithWhitespace = inputEl.value.slice(-1).match(/\s/);
 				var endsWithNewLine = inputEl.value.slice(-1).match(/\n/);
