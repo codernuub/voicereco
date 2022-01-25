@@ -137,10 +137,11 @@
 			};
 
 			recognition.onend = function () {
+				recognizing = false;
 				if (!manuallyClosed) {
 					recognition.start();
+					return;
 				}
-				recognizing = false;
 				clearTimeout(timeout);
 				micBtn.classList.remove('listening');
 				if (oldPlaceholder !== null) inputEl.placeholder = oldPlaceholder;
