@@ -162,9 +162,9 @@
 					var firstAlternative = result[0];
 					if (result.isFinal) {
 						finalTranscript = firstAlternative.transcript;
-					} //else {
-					//interimTranscript += firstAlternative.transcript;
-					//}
+					} else {
+						interimTranscript += firstAlternative.transcript;
+					}
 				}
 
 				// capitalize transcript if start of new sentence
