@@ -65,7 +65,7 @@
 			var parent = inputEl.parentNode;
 			var inputRightBorder = parseInt(getComputedStyle(inputEl).borderRightWidth, 10);
 			var buttonSize = 0.8 * (inputEl.dataset.buttonsize || inputEl.offsetHeight);
-
+			var interim = document.querySelector(`.${inputEl.id}`);
 			// default max size for textareas
 			if (!inputEl.dataset.buttonsize && inputEl.tagName === 'TEXTAREA' && buttonSize > 26) {
 				buttonSize = 26;
@@ -111,7 +111,6 @@
 			var recognizing = false;
 			var timeout;
 			var oldPlaceholder = null;
-			var manuallyClosed = false;
 			const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 			var recognition = new SpeechRecognition();
 			recognition.continuous = true;
@@ -128,7 +127,6 @@
 			}
 
 			recognition.onstart = function () {
-				console.log("Started");
 				oldPlaceholder = inputEl.placeholder;
 				inputEl.placeholder = inputEl.dataset.ready || talkMsg;
 				recognizing = true;
@@ -137,11 +135,19 @@
 			};
 
 			recognition.onend = function () {
+				//On End Append The Interim result in box
+				console.log(`${inputEl.id} ended`);
+
+				var transcript = interim.textContent;
+				transcript = !prefix || isSentence ? capitalize(transcript) : transcript;
+				//Check new line word and append new line char
+				transcript = updateNewLinePair(transcript);
+				// append transcript to cached input value
+				inputEl.value = prefix + transcript;
+				prefix = inputEl.value;
+				interim.textContent = "";
+
 				recognizing = false;
-				if (!manuallyClosed) {
-					recognition.start();
-					return;
-				}
 				clearTimeout(timeout);
 				micBtn.classList.remove('listening');
 				if (oldPlaceholder !== null) inputEl.placeholder = oldPlaceholder;
@@ -160,9 +166,9 @@
 				clearTimeout(timeout);
 				//get SpeechRecognitionResultList object
 				var resultList = event.results;
-				// go through each SpeechRecognitionResult object in the list
 				var finalTranscript = '';
 				var interimTranscript = '';
+				// go through each SpeechRecognitionResult object in the list
 				for (var i = event.resultIndex; i < resultList.length; ++i) {
 					var result = resultList[i];
 					// get this result's first SpeechRecognitionAlternative object
@@ -174,7 +180,7 @@
 					}
 				}
 
-				document.querySelector(`.${inputEl.id}`).textContent = interimTranscript;
+				interim.textContent = interimTranscript;
 				//Capitalize transcript if start of new sentence
 				var transcript = finalTranscript;
 				transcript = !prefix || isSentence ? capitalize(transcript) : transcript;
@@ -183,6 +189,11 @@
 				// append transcript to cached input value
 				inputEl.value = prefix + transcript;
 				prefix = inputEl.value;
+
+				//reset interim transcript and final transcript
+				finalTranscript = '';
+				interimTranscript = '';
+				console.log('here before end!');
 				// set cursur and scroll to end
 				inputEl.focus();
 				if (inputEl.tagName === 'INPUT') {
@@ -198,7 +209,6 @@
 				event.preventDefault();
 				// stop and exit if already going
 				if (recognizing) {
-					manuallyClosed = true;
 					recognition.stop();
 					return;
 				}
