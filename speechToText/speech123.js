@@ -162,14 +162,14 @@
 					// get this result's first SpeechRecognitionAlternative object
 					var firstAlternative = result[0];
 					if (result.isFinal) {
-						finalTranscript = firstAlternative.transcript;
+						finalTranscript += firstAlternative.transcript;
 					} else {
 						interimTranscript += firstAlternative.transcript;
 					}
 				}
 
 				// capitalize transcript if start of new sentence
-				var transcript = finalTranscript //|| interimTranscript;
+				var transcript = finalTranscript || interimTranscript;
 				//var transcript = event.results[event.resultIndex][0].transcript;
 				transcript = !prefix || isSentence ? capitalize(transcript) : transcript;
 
