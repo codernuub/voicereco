@@ -58,7 +58,7 @@
 
 		[...inputEls].forEach(function (inputEl) {
 
-			var patience = parseInt(inputEl.dataset.patience, 10) || defaultPatienceThreshold;
+			//var patience = parseInt(inputEl.dataset.patience, 10) || defaultPatienceThreshold;
 			var micBtn, micIcon, holderIcon, newWrapper;
 
 			// gather inputEl data
@@ -121,10 +121,14 @@
 			// if lang attribute is set on field use that
 			// (defaults to use the lang of the root element)
 			if (inputEl.lang) recognition.lang = inputEl.lang;
-			function restartTimer() {
+
+			//Stop transcriber after 60seconds
+			function shutdownIn(seconds) {
 				timeout = setTimeout(function () {
+					closeManually = true;
 					recognition.stop();
-				}, patience * 1000);
+					console.log("Shutting Down!");
+				}, seconds * 1000);
 			}
 
 			recognition.onstart = function () {
@@ -139,15 +143,23 @@
 				// check if value ends with a sentence
 				isSentence = prefix.trim().slice(-1).match(/[\.\?\!]/);
 				micBtn.classList.add('listening');
-				restartTimer();
 			};
 
-			recognition.onend = function () {
-				console.log("Ended!");
+			recognition.onsoundstart = function () {
+				console.log("Started receiving sound! stop shutdown timer!");
+				clearInterval(timeout);
+			}
+			//If sound stops recieving start 60seconds countdown to stop transcriber
+			recognition.onsoundend = function () {
+				console.log("Stopped recieving sound! starting shutdown timer!");
+				shutdownIn(60)
+			}
 
+			recognition.onend = function () {
 				if (!closeManually) {
 					recognition.start();
-					console.log("Restarted");
+					console.log("Prevented Mic Stop!");
+					return;
 				} else {
 					//On End Append The Interim result in box
 					console.log(`${inputEl.id} ended`);
@@ -213,7 +225,6 @@
 				} else {
 					inputEl.scrollTop = inputEl.scrollHeight;
 				}
-				restartTimer();
 			};
 
 			micBtn.addEventListener('click', function (event) {
