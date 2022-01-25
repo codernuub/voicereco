@@ -111,6 +111,7 @@
 			var recognizing = false;
 			var timeout;
 			var oldPlaceholder = null;
+			var manuallyClosed = false;
 			const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 			var recognition = new SpeechRecognition();
 			recognition.continuous = true;
@@ -136,7 +137,9 @@
 			};
 
 			recognition.onend = function () {
-				console.log("Ended");
+				if (!manuallyClosed) {
+					recognition.start();
+				}
 				recognizing = false;
 				clearTimeout(timeout);
 				micBtn.classList.remove('listening');
@@ -194,6 +197,7 @@
 				event.preventDefault();
 				// stop and exit if already going
 				if (recognizing) {
+					manuallyClosed = true;
 					recognition.stop();
 					return;
 				}
