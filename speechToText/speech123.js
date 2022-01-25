@@ -156,7 +156,7 @@
 				// go through each SpeechRecognitionResult object in the list
 				var finalTranscript = '';
 				var interimTranscript = '';
-				/*for (var i = event.resultIndex; i < resultList.length; ++i) {
+				for (var i = event.resultIndex; i < resultList.length; ++i) {
 					var result = resultList[i];
 					// get this result's first SpeechRecognitionAlternative object
 					var firstAlternative = result[0];
@@ -165,20 +165,19 @@
 					} else {
 						interimTranscript += firstAlternative.transcript;
 					}
-				}*/
+				}
 
 				// capitalize transcript if start of new sentence
-				//consoleResult(`finalTranscript", ${finalTranscript}`);
-				//consoleResult(`InterimTranscript", ${interimTranscript}`);
-				//var transcript = finalTranscript || interimTranscript;
-				var transcript = event.results[0][0].transcript;
+				consoleResult(`finalTranscript", ${finalTranscript}`);
+				consoleResult(`InterimTranscript", ${interimTranscript}`);
+				var transcript = finalTranscript || interimTranscript;
+				//var transcript = event.results[0][0].transcript;
 				transcript = !prefix || isSentence ? capitalize(transcript) : transcript;
 
 				//Check new line word and append new line char
 				transcript = updateNewLinePair(transcript);
 				// append transcript to cached input value
 				inputEl.value = prefix + transcript;
-				console.log(inputEl.value);
 				// set cursur and scroll to end
 				inputEl.focus();
 				if (inputEl.tagName === 'INPUT') {
