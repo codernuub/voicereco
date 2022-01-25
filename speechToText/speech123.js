@@ -137,9 +137,7 @@
 
 			recognition.onend = function () {
 				console.log("Ended");
-				if(timesNotUp)
-				recognition.start();
-
+	
 				recognizing = false;
 				clearTimeout(timeout);
 				micBtn.classList.remove('listening');
@@ -172,7 +170,7 @@
 
 				// capitalize transcript if start of new sentence
 				//var transcript = finalTranscript || interimTranscript;
-				var transcript = event.results[0][0].transcript;
+				var transcript = event.results[event.resultIndex][0].transcript;
 				transcript = !prefix || isSentence ? capitalize(transcript) : transcript;
 
 				//Check new line word and append new line char
