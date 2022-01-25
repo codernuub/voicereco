@@ -92,3 +92,19 @@
 	top: 92.308%; /* 12px / 13px */
 	left: 33.333%; /* 4px / 16px */
 }
+
+.listening > .si-holder{
+   background-color: orangered;
+}
+.listening > .si-mic {
+	background-color: orangered
+}
+.listening > .si-mic::after {
+	background-color: orangered
+}
+.listening > .si-holder::before {
+	background-color: orangered
+}
+.listening > .si-holder::after {
+	background-color: orangered
+}
