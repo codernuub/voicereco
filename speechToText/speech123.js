@@ -1,4 +1,10 @@
 /*global webkitSpeechRecognition */
+const speeches = {
+	speech_1: "",
+	speech_2: "",
+	speech_3: "",
+	speech_4: ""
+};
 (function () {
 	'use strict';
 	const status = document.querySelector('.status');
@@ -55,6 +61,7 @@
 		var inputEls = document.getElementsByClassName('speech-input');
 
 		[].forEach.call(inputEls, function (inputEl) {
+			console.log(inputEl.id);
 			var patience = parseInt(inputEl.dataset.patience, 10) || defaultPatienceThreshold;
 			var micBtn, micIcon, holderIcon, newWrapper;
 			var shouldCapitalize = true;
@@ -105,7 +112,7 @@
 			if (newWrapper) parent.insertBefore(wrapper, nextNode);
 
 			// setup recognition
-			var prefix = '';
+			var prefix = speeches[inputEl.id];
 			var isSentence;
 			var recognizing = false;
 			var timeout;
@@ -114,7 +121,6 @@
 			var recognition = new SpeechRecognition();
 			recognition.continuous = true;
 			recognition.interimResults = true;
-			console.log(recognition);
 
 			// if lang attribute is set on field use that
 			// (defaults to use the lang of the root element)
@@ -137,18 +143,20 @@
 
 			recognition.onend = function () {
 				console.log("Ended");
-	
 				recognizing = false;
 				clearTimeout(timeout);
 				micBtn.classList.remove('listening');
 				if (oldPlaceholder !== null) inputEl.placeholder = oldPlaceholder;
-
 				// If the <input> has data-instant-submit and a value,
 				if (inputEl.dataset.instantSubmit !== undefined && inputEl.value) {
 					// submit the form it's in (if it is in one).
 					if (inputEl.form) inputEl.form.submit();
 				}
 			};
+
+			recognition.onerror = function (event) {
+				console.log(event.error);
+			}
 
 			recognition.onresult = function (event) {
 				clearTimeout(timeout);
@@ -162,7 +170,7 @@
 					// get this result's first SpeechRecognitionAlternative object
 					var firstAlternative = result[0];
 					if (result.isFinal) {
-						finalTranscript += firstAlternative.transcript;
+						finalTranscript = firstAlternative.transcript;
 					} else {
 						interimTranscript += firstAlternative.transcript;
 					}
@@ -170,13 +178,12 @@
 
 				// capitalize transcript if start of new sentence
 				var transcript = finalTranscript || interimTranscript;
-				//var transcript = event.results[event.resultIndex][0].transcript;
 				transcript = !prefix || isSentence ? capitalize(transcript) : transcript;
-
 				//Check new line word and append new line char
 				transcript = updateNewLinePair(transcript);
 				// append transcript to cached input value
-				inputEl.value = prefix + transcript;
+				speeches[inputEl.id] = prefix + transcript; //update text globally
+				inputEl.value = speeches[inputEl.id]
 				// set cursur and scroll to end
 				inputEl.focus();
 				if (inputEl.tagName === 'INPUT') {
