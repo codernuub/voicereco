@@ -156,7 +156,7 @@
 				// go through each SpeechRecognitionResult object in the list
 				var finalTranscript = '';
 				var interimTranscript = '';
-				for (var i = event.resultIndex; i < resultList.length; ++i) {
+				/*for (var i = event.resultIndex; i < resultList.length; ++i) {
 					var result = resultList[i];
 					// get this result's first SpeechRecognitionAlternative object
 					var firstAlternative = result[0];
@@ -165,10 +165,13 @@
 					} else {
 						interimTranscript += firstAlternative.transcript;
 					}
-				}
+				}*/
 
 				// capitalize transcript if start of new sentence
-				var transcript = finalTranscript || interimTranscript;
+				//consoleResult(`finalTranscript", ${finalTranscript}`);
+				//consoleResult(`InterimTranscript", ${interimTranscript}`);
+				//var transcript = finalTranscript || interimTranscript;
+				var transcript = event.results[0][0].transcript;
 				transcript = !prefix || isSentence ? capitalize(transcript) : transcript;
 
 				//Check new line word and append new line char
