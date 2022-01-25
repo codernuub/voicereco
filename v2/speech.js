@@ -74,7 +74,6 @@
 
 			// create wrapper if not present
 			var wrapper = inputEl.parentNode;
-			console.log(wrapper);
 			if (!wrapper.classList.contains('si-wrapper')) {
 				wrapper = document.createElement('div');
 				wrapper.classList.add('si-wrapper');
@@ -122,7 +121,6 @@
 			// if lang attribute is set on field use that
 			// (defaults to use the lang of the root element)
 			if (inputEl.lang) recognition.lang = inputEl.lang;
-			console.log(`${closeManually}, ${inputEl.id}`)
 			function restartTimer() {
 				timeout = setTimeout(function () {
 					recognition.stop();
@@ -134,6 +132,12 @@
 				console.log(inputEl.dataset.ready);
 				inputEl.placeholder = inputEl.dataset.ready || talkMsg;
 				recognizing = true;
+				// Cache current input value which the new transcript will be appended to
+				var endsWithWhitespace = inputEl.value.slice(-1).match(/\s/);
+				//var endsWithNewLine = inputEl.value.slice(-1).match(/\n/);
+				prefix = !inputEl.value || endsWithWhitespace ? inputEl.value : inputEl.value + ' ';
+				// check if value ends with a sentence
+				isSentence = prefix.trim().slice(-1).match(/[\.\?\!]/);
 				micBtn.classList.add('listening');
 				restartTimer();
 			};
@@ -143,6 +147,7 @@
 
 				if (!closeManually) {
 					recognition.start();
+					console.log("Restarted");
 				} else {
 					//On End Append The Interim result in box
 					console.log(`${inputEl.id} ended`);
@@ -220,12 +225,6 @@
 					recognition.stop();
 					return;
 				}
-				// Cache current input value which the new transcript will be appended to
-				var endsWithWhitespace = inputEl.value.slice(-1).match(/\s/);
-				//var endsWithNewLine = inputEl.value.slice(-1).match(/\n/);
-				prefix = !inputEl.value || endsWithWhitespace ? inputEl.value : inputEl.value + ' ';
-				// check if value ends with a sentence
-				isSentence = prefix.trim().slice(-1).match(/[\.\?\!]/);
 				// restart recognition
 				recognition.start();
 			}, false);
