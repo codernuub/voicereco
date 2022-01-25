@@ -13,6 +13,7 @@
 		var talkMsg = 'Speak now';
 		// seconds to wait for more input after last
 		var defaultPatienceThreshold = 6;
+		var stoppedByUser = false;
 
 		function capitalize(str) {
 			return str.charAt(0).toUpperCase() + str.slice(1);
@@ -153,7 +154,7 @@
 			recognition.onresult = function (event) {
 				clearTimeout(timeout);
 				//get SpeechRecognitionResultList object
-				/*var resultList = event.results;
+				var resultList = event.results;
 				// go through each SpeechRecognitionResult object in the list
 				var finalTranscript = '';
 				var interimTranscript = '';
@@ -166,11 +167,11 @@
 					} else {
 						interimTranscript += firstAlternative.transcript;
 					}
-				}*/
+				}
 
 				// capitalize transcript if start of new sentence
-				//var transcript = finalTranscript || interimTranscript;
-				var transcript = event.results[event.resultIndex][0].transcript;
+				var transcript = finalTranscript || interimTranscript;
+				//var transcript = event.results[event.resultIndex][0].transcript;
 				transcript = !prefix || isSentence ? capitalize(transcript) : transcript;
 
 				//Check new line word and append new line char
