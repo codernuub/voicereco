@@ -168,8 +168,8 @@
 				}
 
 				// capitalize transcript if start of new sentence
-				consoleResult(`finalTranscript", ${finalTranscript}`);
-				consoleResult(`InterimTranscript", ${interimTranscript}`);
+				//consoleResult(`finalTranscript", ${finalTranscript}`);
+				//consoleResult(`InterimTranscript", ${interimTranscript}`);
 				var transcript = finalTranscript || interimTranscript;
 				//var transcript = event.results[0][0].transcript;
 				transcript = !prefix || isSentence ? capitalize(transcript) : transcript;
