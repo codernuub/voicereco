@@ -12,7 +12,7 @@
 		if (!('webkitSpeechRecognition' in window)) return;
 		var talkMsg = 'Speak now';
 		// seconds to wait for more input after last
-		var defaultPatienceThreshold = 6;
+		var defaultPatienceThreshold = 10;
 
 		function capitalize(str) {
 			return str.charAt(0).toUpperCase() + str.slice(1);
@@ -151,27 +151,27 @@
 
 			recognition.onresult = function (event) {
 				clearTimeout(timeout);
-				// get SpeechRecognitionResultList object
-				var resultList = event.results;
+				//get SpeechRecognitionResultList object
+				//var resultList = event.results;
 				// go through each SpeechRecognitionResult object in the list
-				var finalTranscript = '';
-				var interimTranscript = '';
-				for (var i = event.resultIndex; i < resultList.length; ++i) {
-					var result = resultList[i];
+				//var finalTranscript = '';
+				//var interimTranscript = '';
+				//for (var i = event.resultIndex; i < resultList.length; ++i) {
+					//var result = resultList[i];
 					// get this result's first SpeechRecognitionAlternative object
-					var firstAlternative = result[0];
-					if (result.isFinal) {
-						finalTranscript = firstAlternative.transcript;
-					} else {
-						interimTranscript += firstAlternative.transcript;
-					}
-				}
+					//var firstAlternative = result[0];
+					//if (result.isFinal) {
+					//	finalTranscript = firstAlternative.transcript;
+					//} else {
+						//interimTranscript += firstAlternative.transcript;
+					//}
+				///}
 
 				// capitalize transcript if start of new sentence
-				consoleResult(`finalTranscript", ${finalTranscript}`);
-				consoleResult(`InterimTranscript", ${interimTranscript}`);
-				var transcript = finalTranscript || interimTranscript;
-				//var transcript = event.results[0][0].transcript;
+				//consoleResult(`finalTranscript", ${finalTranscript}`);
+				//consoleResult(`InterimTranscript", ${interimTranscript}`);
+				//var transcript = finalTranscript || interimTranscript;
+				var transcript = event.results[0][0].transcript;
 				transcript = !prefix || isSentence ? capitalize(transcript) : transcript;
 
 				//Check new line word and append new line char
