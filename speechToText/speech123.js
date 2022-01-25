@@ -1,10 +1,4 @@
 /*global webkitSpeechRecognition */
-const speeches = {
-	speech_1: "",
-	speech_2: "",
-	speech_3: "",
-	speech_4: ""
-};
 (function () {
 	'use strict';
 	const status = document.querySelector('.status');
@@ -112,7 +106,7 @@ const speeches = {
 			if (newWrapper) parent.insertBefore(wrapper, nextNode);
 
 			// setup recognition
-			var prefix = speeches[inputEl.id];
+			var prefix = '';
 			var isSentence;
 			var recognizing = false;
 			var timeout;
@@ -176,14 +170,15 @@ const speeches = {
 					}
 				}
 
-				// capitalize transcript if start of new sentence
-				var transcript = finalTranscript || interimTranscript;
+				document.querySelector(`.${inputEl.id}`).textContent = interimTranscript;
+				//Capitalize transcript if start of new sentence
+				var transcript = finalTranscript;
 				transcript = !prefix || isSentence ? capitalize(transcript) : transcript;
 				//Check new line word and append new line char
 				transcript = updateNewLinePair(transcript);
 				// append transcript to cached input value
-				speeches[inputEl.id] = prefix + transcript; //update text globally
-				inputEl.value = speeches[inputEl.id]
+				inputEl.value = prefix + transcript;
+				prefix = inputEl.value;
 				// set cursur and scroll to end
 				inputEl.focus();
 				if (inputEl.tagName === 'INPUT') {
@@ -197,7 +192,6 @@ const speeches = {
 
 			micBtn.addEventListener('click', function (event) {
 				event.preventDefault();
-				console.log("Recognizing!", recognizing);
 				// stop and exit if already going
 				if (recognizing) {
 					recognition.stop();
