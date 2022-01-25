@@ -21,7 +21,7 @@
 		}
 
 		function updateNewLinePair(str) {
-			var tempPair = "", wordList = [], pair = "";
+			var tempPair = "", wordList = [];
 			str.split(' ').forEach((word) => {
 
 				if (word.toLowerCase() === "newline") {
@@ -43,23 +43,20 @@
 
 				//Match the first pair with second pair
 				if (tempPair.toLocaleLowerCase() === "new" && (word.toLowerCase() === "line")) {
-					//wordList.push(`${tempPair} ${word}\n`);
-					//tempPair = "";
-					pair = `${tempPair} ${word}\n`;
+					tempPair = "";
+					wordList.push('\n');
 					return;
 				}
 
-				if (pair) {
-					wordList.push(`${pair}${word}`);
-					tempPair = "";
-					pair = "";
+				if (wordList[wordList.length - 1] === "\n") {
+					wordList[wordList.length - 1] = wordList[wordList.length - 1] + word;
 					return;
 				}
 
 				//Appending word in new list
 				if (!tempPair) wordList.push(`${word}`);
 			});
-			return wordList.join(' ');
+			return wordList.filter(word => word).join(' ');
 		}
 
 		var inputEls = document.querySelectorAll('.speech-input');
@@ -74,7 +71,8 @@
 			var parent = inputEl.parentNode;
 			var inputRightBorder = parseInt(getComputedStyle(inputEl).borderRightWidth, 10);
 			var buttonSize = 0.8 * (inputEl.dataset.buttonsize || inputEl.offsetHeight);
-			var interim = document.querySelector(`.${inputEl.id}`);
+			var interim = parent.firstElementChild;
+			console.log(interim);
 			// default max size for textareas
 			if (!inputEl.dataset.buttonsize && inputEl.tagName === 'TEXTAREA' && buttonSize > 26) {
 				buttonSize = 26;
