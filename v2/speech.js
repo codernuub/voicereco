@@ -21,7 +21,7 @@
 		}
 
 		function updateNewLinePair(str) {
-			var tempPair = "", wordList = [];
+			var tempPair = "", wordList = [], pair = "";
 			str.split(' ').forEach((word) => {
 
 				if (word.toLowerCase() === "newline") {
@@ -43,8 +43,16 @@
 
 				//Match the first pair with second pair
 				if (tempPair.toLocaleLowerCase() === "new" && (word.toLowerCase() === "line")) {
-					wordList.push(`${tempPair} ${word}\n`);
+					//wordList.push(`${tempPair} ${word}\n`);
+					//tempPair = "";
+					pair = `${tempPair} ${word}\n`;
+					return;
+				}
+
+				if (pair) {
+					wordList.push(`${pair}${word}`);
 					tempPair = "";
+					pair = "";
 					return;
 				}
 
@@ -131,17 +139,23 @@
 				}, seconds * 1000);
 			}
 
+			//Add extra space on new word
+			function addExtraSpace() {
+				// Cache current input value which the new transcript will be appended to
+				var endsWithWhitespace = inputEl.value.slice(-1).match(/\s/);
+				var endsWithNewLine = inputEl.value.slice(-1).match(/\n/);
+				console.log(inputEl.value.slice(-1));
+				console.log(endsWithNewLine)
+				prefix = !inputEl.value || endsWithWhitespace || endsWithNewLine ? inputEl.value : inputEl.value + ' ';
+				// check if value ends with a sentence
+				isSentence = prefix.trim().slice(-1).match(/[\.\?\!]/);
+			}
 			recognition.onstart = function () {
 				oldPlaceholder = inputEl.placeholder;
 				console.log(inputEl.dataset.ready);
 				inputEl.placeholder = inputEl.dataset.ready || talkMsg;
 				recognizing = true;
-				// Cache current input value which the new transcript will be appended to
-				var endsWithWhitespace = inputEl.value.slice(-1).match(/\s/);
-				//var endsWithNewLine = inputEl.value.slice(-1).match(/\n/);
-				prefix = !inputEl.value || endsWithWhitespace ? inputEl.value : inputEl.value + ' ';
-				// check if value ends with a sentence
-				isSentence = prefix.trim().slice(-1).match(/[\.\?\!]/);
+				addExtraSpace();
 				micBtn.classList.add('listening');
 			};
 
@@ -208,7 +222,6 @@
 						interimTranscript += firstAlternative.transcript;
 					}
 				}
-
 				interim.textContent = interimTranscript;
 				//Capitalize transcript if start of new sentence
 				var transcript = finalTranscript;
