@@ -25,11 +25,11 @@
 			str.split(' ').forEach((word) => {
 
 				if (word.toLowerCase() === "newline") {
-					wordList.push(`\n`);
+					word = `${word}\n`;
+					wordList.push(word);
 					return;
 				}
-                
-				//if pair already store "new" then push previous "new" in wordlist and store latest "new" in keyword
+
 				if (tempPair && word.toLowerCase() === "new") {
 					wordList.push(tempPair);
 					tempPair = word;
@@ -37,7 +37,7 @@
 				}
 
 				if (!tempPair && word.toLowerCase() === "new") {
-					tempPair = word;
+					tempPair = "new";
 					return;
 				}
 
@@ -141,17 +141,19 @@
 			function addExtraSpace() {
 				// Cache current input value which the new transcript will be appended to
 				var endsWithWhitespace = inputEl.value.slice(-1).match(/\s/);
-				//var endsWithNewLine = inputEl.value.slice(-1).match(/\n/);
-				prefix = !inputEl.value || endsWithWhitespace ? inputEl.value : inputEl.value + ' ';
+				var endsWithNewLine = inputEl.value.slice(-1).match(/\n/);
+				console.log(inputEl.value.slice(-1));
+				console.log(endsWithNewLine)
+				prefix = !inputEl.value || endsWithWhitespace || endsWithNewLine ? inputEl.value : inputEl.value + ' ';
 				// check if value ends with a sentence
 				isSentence = prefix.trim().slice(-1).match(/[\.\?\!]/);
 			}
-
 			recognition.onstart = function () {
 				oldPlaceholder = inputEl.placeholder;
 				console.log(inputEl.dataset.ready);
 				inputEl.placeholder = inputEl.dataset.ready || talkMsg;
 				recognizing = true;
+				addExtraSpace();
 				micBtn.classList.add('listening');
 			};
 
@@ -202,7 +204,6 @@
 			}
 
 			recognition.onresult = function (event) {
-				addExtraSpace();
 				clearTimeout(timeout);
 				//get SpeechRecognitionResultList object
 				var resultList = event.results;
